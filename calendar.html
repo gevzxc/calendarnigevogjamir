@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>2025 Year Calendar</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5em;
+      color: #2c3e50;
+    }
+    h3 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 1.5em;
+        color: #2c3e50;
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .month {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .month:hover {
+      transform: scale(1.02);
+    }
+
+    .month h2 {
+      margin: 0;
+      padding: 10px 0;
+      text-align: center;
+      font-size: 1.4em;
+      color: #fff;
+    }
+
+    .day-names, .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.85em;
+    }
+
+    .day-names div {
+      font-weight: bold;
+      padding: 5px 0;
+      color: #555;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .days div {
+      padding: 8px;
+      margin: 2px;
+      border-radius: 6px;
+    }
+
+    .weekend {
+      color: red;
+      font-weight: bold;
+    }
+
+    .today {
+      background: #27ae60;
+      color: white;
+      font-weight: bold;
+    }
+
+    .holiday {
+      background: #f9ca24;
+      color: #000;
+      font-weight: bold;
+    }
+
+    /* Month color themes */
+    .month-0 h2 { background: #e74c3c; }   /* Jan - Red */
+    .month-1 h2 { background: #9b59b6; }   /* Feb - Purple */
+    .month-2 h2 { background: #3498db; }   /* Mar - Blue */
+    .month-3 h2 { background: #1abc9c; }   /* Apr - Teal */
+    .month-4 h2 { background: #2ecc71; }   /* May - Green */
+    .month-5 h2 { background: #f1c40f; }   /* Jun - Yellow */
+    .month-6 h2 { background: #e67e22; }   /* Jul - Orange */
+    .month-7 h2 { background: #d35400; }   /* Aug - Deep Orange */
+    .month-8 h2 { background: #2980b9; }   /* Sep - Royal Blue */
+    .month-9 h2 { background: #8e44ad; }   /* Oct - Dark Purple */
+    .month-10 h2 { background: #16a085; }  /* Nov - Sea Green */
+    .month-11 h2 { background: #c0392b; }  /* Dec - Crimson */
+  </style>
+</head>
+<body>
+  <h3>Gevirick and Jamir</h3>
+  <h1>2025 Year Calendar</h1>
+  <div class="calendar" id="calendar"></div>
+
+  <script>
+    const calendar = document.getElementById("calendar");
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const today = new Date();
+    const year = 2025;
+
+    // Sample holidays (Philippines)
+    const holidays = {
+      "1-1": "New Year",
+      "2-25": "EDSA Revolution",
+      "4-17": "Maundy Thursday",
+      "4-18": "Good Friday",
+      "5-1": "Labor Day",
+      "6-12": "Independence Day",
+      "8-21": "Ninoy Aquino Day",
+      "11-1": "All Saints Day",
+      "11-30": "Bonifacio Day",
+      "12-25": "Christmas Day",
+      "12-30": "Rizal Day"
+    };
+
+    function createMonth(monthIndex) {
+      const firstDay = new Date(year, monthIndex, 1);
+      const lastDay = new Date(year, monthIndex + 1, 0);
+      const monthDiv = document.createElement("div");
+      monthDiv.className = `month month-${monthIndex}`;
+
+      const title = document.createElement("h2");
+      title.textContent = months[monthIndex];
+      monthDiv.appendChild(title);
+
+      const dayNames = document.createElement("div");
+      dayNames.className = "day-names";
+      daysOfWeek.forEach(day => {
+        const dayDiv = document.createElement("div");
+        dayDiv.textContent = day;
+        dayNames.appendChild(dayDiv);
+      });
+      monthDiv.appendChild(dayNames);
+
+      const days = document.createElement("div");
+      days.className = "days";
+
+      for (let i = 0; i < firstDay.getDay(); i++) {
+        days.appendChild(document.createElement("div"));
+      }
+
+      for (let d = 1; d <= lastDay.getDate(); d++) {
+        const date = new Date(year, monthIndex, d);
+        const dayDiv = document.createElement("div");
+        dayDiv.textContent = d;
+
+        const day = date.getDay();
+        const key = `${monthIndex + 1}-${d}`;
+
+        if (day === 0 || day === 6) {
+          dayDiv.classList.add("weekend");
+        }
+
+        if (holidays[key]) {
+          dayDiv.classList.add("holiday");
+          dayDiv.title = holidays[key];
+        }
+
+        if (today.getFullYear() === year &&
+            today.getMonth() === monthIndex &&
+            today.getDate() === d) {
+          dayDiv.classList.add("today");
+        }
+
+        days.appendChild(dayDiv);
+      }
+
+      monthDiv.appendChild(days);
+      return monthDiv;
+    }
+
+    for (let i = 0; i < 12; i++) {
+      calendar.appendChild(createMonth(i));
+    }
+  </script>
+</body>
+</html>
